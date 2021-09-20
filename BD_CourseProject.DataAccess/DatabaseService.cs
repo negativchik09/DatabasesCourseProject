@@ -94,10 +94,7 @@ namespace BD_CourseProject.DataAccess
 
         public IEnumerable<Expense> GetExpensesByMember(Member member)
         {
-            return _ctx.Members.Where(x => x.Id == member.Id).Join(_ctx.Expenses,
-                mem => mem.Id,
-                exp => exp.MemberId,
-                (mem, exp) => new Expense()
+            return _ctx.Expenses.Where(x => x.MemberId == member.Id).Select(exp => new Expense()
                 {
                     Id = exp.Id,
                     Member = member,
