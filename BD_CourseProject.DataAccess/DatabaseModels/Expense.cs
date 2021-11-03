@@ -2,11 +2,11 @@
 
 namespace BD_CourseProject.DataAccess.DatabaseModels
 {
-    internal record ExpenseDomain : DatabaseModelBase
+    public record Expense : DatabaseModelBase
     {
-        public int MemberId { get; set; }
+        public Member Member { get; set; }
         public DateTime Date { get; set; }
-        public string Reason { get; set; }
+        public ExpenseReason Reason { get; set; }
         public double Sum { get; set; }
     }
 }

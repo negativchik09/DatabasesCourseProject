@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using BD_CourseProject.DataAccess.DatabaseModels;
-using BD_CourseProject.DataAccess.DTO;
 using BD_CourseProject.DataAccess.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
@@ -19,129 +18,74 @@ namespace BD_CourseProject.DataAccess
             public DatabaseContext CreateDbContext(string[] args)
             {
                 var optionsBuilder = new DbContextOptionsBuilder<DatabaseContext>();
-                optionsBuilder.UseSqlServer(args[0]);
+                optionsBuilder.UseSqlServer(
+                    "Server=localhost\\SQLEXPRESS;Database=BD_CourseProject;Trusted_Connection=True;",
+                    builder => builder.MigrationsAssembly("BD_CourseProject.DataAccess")
+                    );
 
                 return new DatabaseContext(optionsBuilder.Options);
             }
         }
 
-        public DatabaseService(string connectionString)
+        public DatabaseService()
         {
-            _ctx = new DatabaseContextFactory().CreateDbContext(new string[] {connectionString});
+            _ctx = new DatabaseContextFactory().CreateDbContext(new string[]{});
         }
 
-        public IEnumerable<Member> Members => _ctx.Members.Select(x => new Member()
-        {
-            DateOfBirth = x.DateOfBirth,
-            FirstName = x.FirstName,
-            LastName = x.LastName,
-            Id = x.Id,
-            Role = x.Role
-        }).ToList();
+        public IEnumerable<Member> Members => _ctx.Members;
         
-        public async void Create(Member member)
+        public async Task Create(Member member)
         {
-            await _ctx.AddAsync(new MemberDomain()
-            {
-                DateOfBirth = member.DateOfBirth,
-                FirstName = member.FirstName,
-                LastName = member.LastName,
-                Role = member.Role
-            });
+            await _ctx.AddAsync(member);
             await _ctx.SaveChangesAsync();
         }
 
-        public async void Update(Member member)
+        public async Task Update(Member member)
         {
-            var mem = _ctx.Members.First(x => x.Id == member.Id);
-            mem.FirstName = member.FirstName;
-            mem.LastName = member.LastName;
-            mem.Role = member.Role;
-            mem.DateOfBirth = member.DateOfBirth;
+            _ctx.Members.Update(member);
             await _ctx.SaveChangesAsync();
         }
 
-        public async void Delete(Member member)
+        public async Task Delete(Member member)
         {
             _ctx.Members.Remove(_ctx.Members.First(x => x.Id == member.Id));
             await _ctx.SaveChangesAsync();
         }
 
-        public Member GetMemberById(Func<Member, bool> predicate)
+        public IEnumerable<Income> Incomes => _ctx.Incomes
+            .Include(x => x.Member)
+            .Include(x => x.Source);
+        
+        public async Task Create(Income income)
         {
-            return _ctx.Members.Select(memberDomain => new Member()
+            var source = _ctx.IncomeSources.FirstOrDefault(x => x.Id == income.Source.Id);
+            if (source == null)
             {
-                Id = memberDomain.Id,
-                DateOfBirth = memberDomain.DateOfBirth,
-                FirstName = memberDomain.FirstName,
-                LastName = memberDomain.LastName,
-                Role = memberDomain.Role
-            }).First(predicate);
+                throw new ArgumentException("invalid source Id");
+            }
+
+            income.Source = source;
+
+            await _ctx.AddAsync(income);
+            await _ctx.SaveChangesAsync();
         }
 
-        public IEnumerable<Income> GetIncomesByMember(Member member)
+        public IEnumerable<Expense> Expenses => _ctx.Expenses
+            .Include(x => x.Member)
+            .Include(x => x.Reason);
+        
+        public async Task Create(Expense expense)
         {
-            return _ctx.Incomes.Where(x => x.MemberId == member.Id)
-                .Select(x => new Income()
-                {
-                    Id = x.Id,
-                    Member = GetMemberById(mem => mem.Id == x.MemberId),
-                    Source = x.Source,
-                    Date = x.Date,
-                    Sum = x.Sum
-                });
-        }
-
-        public IEnumerable<Expense> GetExpensesByMember(Member member)
-        {
-            return _ctx.Expenses.Where(x => x.MemberId == member.Id).Select(exp => new Expense()
-                {
-                    Id = exp.Id,
-                    Member = member,
-                    Date = exp.Date,
-                    Reason = exp.Reason,
-                    Sum = exp.Sum
-                });
-        }
-
-        public IEnumerable<Income> Incomes => _ctx.Incomes.Select(x => new Income()
-        {
-            Id = x.Id,
-            Member = GetMemberById(member => member.Id == x.MemberId),
-            Source = x.Source,
-            Date = x.Date,
-            Sum = x.Sum
-        }).ToList();
-        public void Create(Income income)
-        {
-            _ctx.Incomes.Add(new IncomeDomain()
+            var reason = _ctx.ExpenseReasons.FirstOrDefault(x => x.Id == expense.Reason.Id);
+            if (reason == null)
             {
-                MemberId = income.Member.Id,
-                Date = income.Date,
-                Source = income.Source,
-                Sum = income.Sum
-            });
-            _ctx.SaveChangesAsync();
-        }
+                throw new ArgumentException("invalid source Id");
+            }
 
-        public IEnumerable<Expense> Expenses => _ctx.Expenses.Select(x => new Expense()
-        {
-            Id = x.Id,
-            Member = GetMemberById(member => member.Id == x.MemberId),
-            Reason = x.Reason,
-            Date = x.Date,
-            Sum = x.Sum
-        }).ToList();
-        public void Create(Expense expense)
-        {
-            _ctx.Expenses.Add(new ExpenseDomain()
-            {
-                MemberId = expense.Member.Id,
-                Date = expense.Date,
-                Reason = expense.Reason,
-                Sum = expense.Sum
-            });
-            _ctx.SaveChangesAsync();
+            expense.Reason = reason;
+
+            await _ctx.AddAsync(expense);
+            await _ctx.SaveChangesAsync();
         }
     }
 }
