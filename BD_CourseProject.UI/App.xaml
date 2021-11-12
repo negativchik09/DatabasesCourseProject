@@ -1,9 +1,9 @@
-﻿<Application x:Class="BD_CourseProject.App"
+﻿<Application x:Class="BD_CourseProject.UI.App"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:local="clr-namespace:BD_CourseProject"
+             xmlns:local="clr-namespace:BD_CourseProject.UI"
              StartupUri="MainWindow.xaml">
     <Application.Resources>
-         
+        
     </Application.Resources>
 </Application>
