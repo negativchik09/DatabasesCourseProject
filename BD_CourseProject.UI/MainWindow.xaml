@@ -1,12 +1,113 @@
-﻿<Window x:Class="BD_CourseProject.MainWindow"
+﻿<Window x:Class="BD_CourseProject.UI.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:BD_CourseProject"
+        xmlns:local="clr-namespace:BD_CourseProject.UI"
+        xmlns:viewModels="clr-namespace:BD_CourseProject.UI.ViewModels"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="MainWindow" Height="800" Width="1200" ResizeMode="CanMinimize" FontFamily="Arial" FontSize="16">
+    <Window.Resources>
+        <viewModels:MembersTabViewModel x:Key="MemberViewModel"/>
+        <viewModels:IncomesTabViewModel x:Key="IncomesViewModel"/>
+        <viewModels:ExpensesTabViewModel x:Key="ExpensesViewModel"/>
+        <Style TargetType="Button" x:Key="Button">
+            <Setter Property="Height" Value="50"/>
+            <Setter Property="Width" Value="100"/>
+            <Setter Property="BorderThickness" Value="1"></Setter>
+            <Setter Property="Margin" Value="0"></Setter>
+        </Style>
+        <Style TargetType="TabItem" x:Key="TabHeader">
+            <Setter Property="Height" Value="40"/>
+            <Setter Property="Width" Value="120"/>
+        </Style>
+    </Window.Resources>
     <Grid>
-
+        <Grid.RowDefinitions>
+            <RowDefinition Height="0.025*"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Menu>
+            <MenuItem Header="Файл">
+                
+            </MenuItem>
+            <MenuItem Header="Правка">
+                
+            </MenuItem>
+        </Menu>
+        <TabControl Grid.Row="1" HorizontalContentAlignment="Stretch">
+            <TabItem DataContext="{Binding 
+                Source={StaticResource MemberViewModel}}"
+                     Style="{StaticResource TabHeader}">
+                <TabItem.Header>
+                    <TextBlock TextAlignment="Center">Пользователи</TextBlock>
+                </TabItem.Header>
+                <TabItem.Content>
+                    <DockPanel>
+                        <StackPanel Orientation="Horizontal" DockPanel.Dock="Top">
+                            <Button Content="Update" 
+                                    Command="{Binding Update}" 
+                                    Style="{StaticResource Button}"/>
+                            <Button Content="Add" 
+                                    Command="{Binding Update}"
+                                    Style="{StaticResource Button}"/>
+                        </StackPanel>
+                        <ListView ItemsSource="{Binding Members}" 
+                                  SelectedItem="{Binding SelectedMember}"
+                                  DockPanel.Dock="Left">
+                            <ListView.ItemTemplate>
+                                <DataTemplate>
+                                    <UniformGrid Columns="6" Width="600">
+                                        <UniformGrid.Resources>
+                                            <Style TargetType="TextBlock">
+                                                <Setter Property="Margin" Value="5"></Setter>
+                                                <Setter Property="TextAlignment" Value="Center"></Setter>
+                                            </Style>
+                                        </UniformGrid.Resources>
+                                        <TextBlock Text="{Binding FirstName}"></TextBlock>
+                                        <TextBlock Text="{Binding LastName}"></TextBlock>
+                                        <TextBlock Text="{Binding DateString}"></TextBlock>
+                                        <TextBlock Text="{Binding Role}"></TextBlock>
+                                        <TextBlock Text="{Binding IncomesSum}"></TextBlock>
+                                        <TextBlock Text="{Binding ExpensesSum}"></TextBlock>
+                                    </UniformGrid>
+                                </DataTemplate>
+                            </ListView.ItemTemplate>
+                        </ListView>
+                        <StackPanel DockPanel.Dock="Right">
+                            <TextBlock Text="{Binding SelectedMember.LastName}" TextAlignment="Center"/>
+                            <TextBlock Text="{Binding SelectedMember.FirstName}" TextAlignment="Center"/>
+                            <ListView >
+                                
+                            </ListView>
+                        </StackPanel>
+                    </DockPanel>
+                </TabItem.Content>
+            </TabItem>
+            <TabItem DataContext="{Binding 
+                Source={StaticResource IncomesViewModel}}"
+                     Style="{StaticResource TabHeader}">
+                <TabItem.Header>
+                    <TextBlock TextAlignment="Center">Доходы</TextBlock>
+                </TabItem.Header>
+                <TabItem.Content>
+                    <DockPanel>
+                        <StackPanel Orientation="Horizontal" DockPanel.Dock="Top">
+                            <Button Content="Update"></Button>
+                        </StackPanel>
+                    </DockPanel>
+                </TabItem.Content>
+            </TabItem>
+            <TabItem DataContext="{Binding 
+                Source={StaticResource ExpensesViewModel}}"
+                     Style="{StaticResource TabHeader}">
+                <TabItem.Header>
+                    <TextBlock TextAlignment="Center">Расходы</TextBlock>
+                </TabItem.Header>
+                <TabItem.Content>
+                    <TextBlock TextAlignment="Center">Пользователи</TextBlock>
+                </TabItem.Content>
+            </TabItem>
+        </TabControl>
     </Grid>
 </Window>

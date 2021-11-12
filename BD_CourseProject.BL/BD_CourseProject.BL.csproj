@@ -4,4 +4,8 @@
         <TargetFramework>net5.0</TargetFramework>
     </PropertyGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\BD_CourseProject.DataAccess\BD_CourseProject.DataAccess.csproj" />
+    </ItemGroup>
+
 </Project>

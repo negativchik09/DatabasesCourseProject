@@ -2,9 +2,12 @@
 
     <PropertyGroup>
         <OutputType>WinExe</OutputType>
-        <TargetFramework>net5.0-windows</TargetFramework>
         <UseWPF>true</UseWPF>
-        <RootNamespace>BD_CourseProject</RootNamespace>
+        <TargetFramework>net5.0-windows</TargetFramework>
     </PropertyGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\BD_CourseProject.BL\BD_CourseProject.BL.csproj" />
+    </ItemGroup>
 
 </Project>

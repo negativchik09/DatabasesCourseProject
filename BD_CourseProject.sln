@@ -4,7 +4,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BD_CourseProject.BL", "BD_C
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BD_CourseProject.DataAccess", "BD_CourseProject.DataAccess\BD_CourseProject.DataAccess.csproj", "{C308E8A4-8317-49CE-AA23-E57623601ED3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BD_CourseProject.UI", "BD_CourseProject.UI\BD_CourseProject.UI.csproj", "{17914438-6889-46E6-908F-472C2858D597}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BD_CourseProject.UI", "BD_CourseProject.UI\BD_CourseProject.UI.csproj", "{29A1C3BD-7A58-40AC-A070-3ABCC23B2DE5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -20,9 +20,9 @@ Global
 		{C308E8A4-8317-49CE-AA23-E57623601ED3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C308E8A4-8317-49CE-AA23-E57623601ED3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C308E8A4-8317-49CE-AA23-E57623601ED3}.Release|Any CPU.Build.0 = Release|Any CPU
-		{17914438-6889-46E6-908F-472C2858D597}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{17914438-6889-46E6-908F-472C2858D597}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{17914438-6889-46E6-908F-472C2858D597}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{17914438-6889-46E6-908F-472C2858D597}.Release|Any CPU.Build.0 = Release|Any CPU
+		{29A1C3BD-7A58-40AC-A070-3ABCC23B2DE5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{29A1C3BD-7A58-40AC-A070-3ABCC23B2DE5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{29A1C3BD-7A58-40AC-A070-3ABCC23B2DE5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{29A1C3BD-7A58-40AC-A070-3ABCC23B2DE5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

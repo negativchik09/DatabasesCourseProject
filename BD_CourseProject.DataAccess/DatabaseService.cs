@@ -12,7 +12,6 @@ namespace BD_CourseProject.DataAccess
     public class DatabaseService : IDatabaseService
     {
         private readonly DatabaseContext _ctx;
-        
         private class DatabaseContextFactory : IDesignTimeDbContextFactory<DatabaseContext>
         {
             public DatabaseContext CreateDbContext(string[] args)
@@ -26,13 +25,22 @@ namespace BD_CourseProject.DataAccess
                 return new DatabaseContext(optionsBuilder.Options);
             }
         }
+        
+        public static DatabaseService Instance { get; }
 
-        public DatabaseService()
+        static DatabaseService()
+        {
+            Instance = new DatabaseService();
+        }
+
+        private DatabaseService()
         {
             _ctx = new DatabaseContextFactory().CreateDbContext(new string[]{});
         }
 
-        public IEnumerable<Member> Members => _ctx.Members;
+        public IEnumerable<Member> Members => _ctx.Members
+            .Include(x => x.Expenses)
+            .Include(x => x.Incomes);
         
         public async Task Create(Member member)
         {
@@ -42,7 +50,7 @@ namespace BD_CourseProject.DataAccess
 
         public async Task Update(Member member)
         {
-            _ctx.Members.Update(member);
+            _ctx.Members.Update(_ctx.Members.First(x => x.Id == member.Id));
             await _ctx.SaveChangesAsync();
         }
 
