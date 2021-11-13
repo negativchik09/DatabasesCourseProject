@@ -45,40 +45,76 @@
                 <TabItem.Content>
                     <DockPanel>
                         <StackPanel Orientation="Horizontal" DockPanel.Dock="Top">
-                            <Button Content="Update" 
-                                    Command="{Binding Update}" 
+                            <Button Content="UpdateData" 
+                                    Command="{Binding UpdateData}"
                                     Style="{StaticResource Button}"/>
                             <Button Content="Add" 
+                                    Command="{Binding Add}"
+                                    Style="{StaticResource Button}"/>
+                            <Button Content="Update" 
                                     Command="{Binding Update}"
+                                    CommandParameter="{Binding SelectedMember}"
+                                    Style="{StaticResource Button}"/>
+                            <Button Content="Delete" 
+                                    Command="{Binding Delete}"
+                                    CommandParameter="{Binding SelectedMember}"
                                     Style="{StaticResource Button}"/>
                         </StackPanel>
-                        <ListView ItemsSource="{Binding Members}" 
-                                  SelectedItem="{Binding SelectedMember}"
+                        <TextBox
+                                DockPanel.Dock="Top"
+                                Width="800"
+                                 Margin="5"
+                                 Height="20"
+                                 Text="{Binding MemberSearch, 
+                                 UpdateSourceTrigger=PropertyChanged}"/>
+                        <ListView ItemsSource="{Binding Members}"
+                                  SelectedItem="{Binding SelectedMember,
+                                        UpdateSourceTrigger=PropertyChanged}"
+                                  SelectionMode="Single"
                                   DockPanel.Dock="Left">
-                            <ListView.ItemTemplate>
-                                <DataTemplate>
-                                    <UniformGrid Columns="6" Width="600">
-                                        <UniformGrid.Resources>
-                                            <Style TargetType="TextBlock">
-                                                <Setter Property="Margin" Value="5"></Setter>
-                                                <Setter Property="TextAlignment" Value="Center"></Setter>
-                                            </Style>
-                                        </UniformGrid.Resources>
-                                        <TextBlock Text="{Binding FirstName}"></TextBlock>
-                                        <TextBlock Text="{Binding LastName}"></TextBlock>
-                                        <TextBlock Text="{Binding DateString}"></TextBlock>
-                                        <TextBlock Text="{Binding Role}"></TextBlock>
-                                        <TextBlock Text="{Binding IncomesSum}"></TextBlock>
-                                        <TextBlock Text="{Binding ExpensesSum}"></TextBlock>
-                                    </UniformGrid>
-                                </DataTemplate>
-                            </ListView.ItemTemplate>
-                        </ListView>
+                                    <ListView.ItemTemplate>
+                                        <DataTemplate>
+                                            <UniformGrid Columns="7" Width="700">
+                                                <UniformGrid.Resources>
+                                                <Style TargetType="TextBlock">
+                                                    <Setter Property="Margin" Value="7"></Setter>
+                                                    <Setter Property="TextAlignment" Value="Center"></Setter>
+                                                </Style>
+                                                </UniformGrid.Resources>
+                                                <TextBlock Text="{Binding FirstName}"></TextBlock>
+                                                <TextBlock Text="{Binding LastName}"></TextBlock>
+                                                <TextBlock Text="{Binding DateString}"></TextBlock>
+                                                <TextBlock Text="{Binding Role}"></TextBlock>
+                                                <TextBlock Text="{Binding IncomesSum}"></TextBlock>
+                                                <TextBlock Text="{Binding ExpensesSum}"></TextBlock>
+                                                <TextBlock Text="{Binding Marge}"></TextBlock>
+                                            </UniformGrid>
+                                        </DataTemplate>
+                                    </ListView.ItemTemplate>
+                                </ListView>
                         <StackPanel DockPanel.Dock="Right">
                             <TextBlock Text="{Binding SelectedMember.LastName}" TextAlignment="Center"/>
                             <TextBlock Text="{Binding SelectedMember.FirstName}" TextAlignment="Center"/>
-                            <ListView >
-                                
+                            <ListView ItemsSource="{Binding Stats}">
+                                <ListView.ItemTemplate>
+                                    <DataTemplate>
+                                        <UniformGrid Columns="7" Width="700">
+                                            <UniformGrid.Resources>
+                                                <Style TargetType="TextBlock">
+                                                    <Setter Property="Margin" Value="5"></Setter>
+                                                    <Setter Property="TextAlignment" Value="Center"></Setter>
+                                                </Style>
+                                            </UniformGrid.Resources>
+                                            <TextBlock Text="{Binding FirstName}"></TextBlock>
+                                            <TextBlock Text="{Binding LastName}"></TextBlock>
+                                            <TextBlock Text="{Binding DateString}"></TextBlock>
+                                            <TextBlock Text="{Binding Role}"></TextBlock>
+                                            <TextBlock Text="{Binding IncomesSum}"></TextBlock>
+                                            <TextBlock Text="{Binding ExpensesSum}"></TextBlock>
+                                            <TextBlock Text="{Binding Marge}"></TextBlock>
+                                        </UniformGrid>
+                                    </DataTemplate>
+                                </ListView.ItemTemplate>
                             </ListView>
                         </StackPanel>
                     </DockPanel>
@@ -93,7 +129,7 @@
                 <TabItem.Content>
                     <DockPanel>
                         <StackPanel Orientation="Horizontal" DockPanel.Dock="Top">
-                            <Button Content="Update"></Button>
+                            <Button Content="UpdateData"></Button>
                         </StackPanel>
                     </DockPanel>
                 </TabItem.Content>

@@ -4,9 +4,40 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:local="clr-namespace:BD_CourseProject.UI"
+        xmlns:cmd="clr-namespace:BD_CourseProject.UI.Commands"
         mc:Ignorable="d"
-        Title="MemberView" Height="450" Width="800">
-    <Grid>
+        Title="MemberView" Height="450" Width="800"
+        DataContext="{Binding RelativeSource={RelativeSource Self}}">
+    <Window.Resources>
         
-    </Grid>
+        <Style TargetType="TextBlock">
+            <Setter Property="HorizontalAlignment" Value="Center"></Setter>
+        </Style>
+        <Style TargetType="TextBox">
+            <Setter Property="HorizontalAlignment" Value="Center"></Setter>
+        </Style>
+    </Window.Resources>
+    <StackPanel Orientation="Vertical">
+        <TextBlock Text="First name"/>
+        <TextBox Text="{Binding FirstName}" Width="600"/>
+        <TextBlock Text="Last name"/>
+        <TextBox Text="{Binding LastName}" Width="600"/>
+        <TextBlock Text="Role"/>
+        <ComboBox ItemsSource="{Binding FamilyRoleTypeValues}"
+                  DisplayMemberPath="Value"
+                  SelectedValuePath="Key"
+                  SelectedValue="{Binding Role, Mode=TwoWay}"/>
+        <TextBlock Text="Date of birth"/>
+        <DatePicker SelectedDate="{Binding DateOfBirth}" SelectedDateFormat="Short"/>
+        <Button Content="OK" IsDefault="True" CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=local:MemberView}}">
+            <Button.Command>
+                <cmd:CloseDialogCommand DialogResult="True"/>
+            </Button.Command>
+        </Button>
+        <Button Content="Cancel" CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=local:MemberView}}">
+            <Button.Command>
+                <cmd:CloseDialogCommand DialogResult="False"/>
+            </Button.Command>
+        </Button>
+    </StackPanel>
 </Window>

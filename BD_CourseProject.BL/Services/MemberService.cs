@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using BD_CourseProject.BL.Entities;
@@ -20,38 +21,42 @@ namespace BD_CourseProject.BL.Services
 
         public IEnumerable<MemberInfo> MemberInfos(string searchCriteria)
         {
-            return _db.Members.Where(m => m.FirstName.Contains(searchCriteria)
-                                          || m.LastName.Contains(searchCriteria)
-                                          || m.Role.ToString().Contains(searchCriteria)
-                                          || string.IsNullOrEmpty(searchCriteria))
+            Func<Member, bool> isLastNameContains = (m) => m.LastName.ToLower().Contains(searchCriteria.ToLower());
+            Func<Member, bool> isFirstNameContains = (m) => m.FirstName.ToLower().Contains(searchCriteria.ToLower());
+            Func<Member, bool> isRoleContains = (m) => m.Role.ToString().ToLower().Contains(searchCriteria.ToLower());
+            return _db.Members.Where(m => string.IsNullOrEmpty(searchCriteria) 
+                                          || isFirstNameContains(m)
+                                          || isLastNameContains(m)
+                                          || isRoleContains(m))
                 .Select(m => new MemberInfo(m));
         }
 
         public void AddMember(MemberData data)
         {
-            Task.Factory.StartNew(() => _db.Create(new Member()
+            _db.Create(new Member()
             {
                 DateOfBirth = data.DateOfBirth.Date,
                 LastName = data.LastName,
                 FirstName = data.FirstName,
                 Role = data.Role
-            }));
+            });
         }
 
         public void RemoveMember(MemberData data)
         {
-            Task.Factory.StartNew(() => _db.Delete(new Member(){Id = data.Id}));
+            _db.Delete(new Member(){Id = data.Id});
         }
 
         public void UpdateMember(MemberData data)
         {
-            Task.Factory.StartNew(() => _db.Update(new Member()
+            _db.Update(new Member()
             {
+                Id = data.Id,
                 DateOfBirth = data.DateOfBirth.Date,
                 LastName = data.LastName,
                 FirstName = data.FirstName,
                 Role = data.Role
-            }));
+            });
         }
 
         public IEnumerable<RecordModel> MemberStats(MemberStatsFilter filters)

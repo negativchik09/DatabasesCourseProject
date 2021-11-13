@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using BD_CourseProject.DataAccess.DatabaseModels;
 using BD_CourseProject.DataAccess.Interfaces;
 using Microsoft.EntityFrameworkCore;
@@ -42,29 +41,34 @@ namespace BD_CourseProject.DataAccess
             .Include(x => x.Expenses)
             .Include(x => x.Incomes);
         
-        public async Task Create(Member member)
+        public void Create(Member member)
         {
-            await _ctx.AddAsync(member);
-            await _ctx.SaveChangesAsync();
+            _ctx.Add(member);
+            _ctx.SaveChanges();
         }
 
-        public async Task Update(Member member)
+        public void Update(Member member)
         {
-            _ctx.Members.Update(_ctx.Members.First(x => x.Id == member.Id));
-            await _ctx.SaveChangesAsync();
+            var entity = _ctx.Members.First(x => x.Id == member.Id);
+            entity.Role = member.Role;
+            entity.FirstName = member.FirstName;
+            entity.LastName = member.LastName;
+            entity.DateOfBirth = member.DateOfBirth;
+            _ctx.Members.Update(entity);
+            _ctx.SaveChanges();
         }
 
-        public async Task Delete(Member member)
+        public void Delete(Member member)
         {
             _ctx.Members.Remove(_ctx.Members.First(x => x.Id == member.Id));
-            await _ctx.SaveChangesAsync();
+            _ctx.SaveChanges();
         }
 
         public IEnumerable<Income> Incomes => _ctx.Incomes
             .Include(x => x.Member)
             .Include(x => x.Source);
         
-        public async Task Create(Income income)
+        public void Create(Income income)
         {
             var source = _ctx.IncomeSources.FirstOrDefault(x => x.Id == income.Source.Id);
             if (source == null)
@@ -74,15 +78,15 @@ namespace BD_CourseProject.DataAccess
 
             income.Source = source;
 
-            await _ctx.AddAsync(income);
-            await _ctx.SaveChangesAsync();
+            _ctx.Add(income);
+            _ctx.SaveChanges();
         }
 
         public IEnumerable<Expense> Expenses => _ctx.Expenses
             .Include(x => x.Member)
             .Include(x => x.Reason);
         
-        public async Task Create(Expense expense)
+        public void Create(Expense expense)
         {
             var reason = _ctx.ExpenseReasons.FirstOrDefault(x => x.Id == expense.Reason.Id);
             if (reason == null)
@@ -92,8 +96,8 @@ namespace BD_CourseProject.DataAccess
 
             expense.Reason = reason;
 
-            await _ctx.AddAsync(expense);
-            await _ctx.SaveChangesAsync();
+            _ctx.Add(expense);
+            _ctx.SaveChanges();
         }
     }
 }

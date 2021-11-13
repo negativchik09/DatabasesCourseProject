@@ -7,6 +7,7 @@ namespace BD_CourseProject.BL.Entities
     {
         public double ExpensesSum { get; set; }
         public double IncomesSum { get; set; }
+        public double Marge => IncomesSum - ExpensesSum;
         public MemberInfo(){}
 
         internal MemberInfo(Member member) : base(member)
