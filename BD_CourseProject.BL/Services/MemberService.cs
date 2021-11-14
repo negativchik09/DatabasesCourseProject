@@ -63,19 +63,19 @@ namespace BD_CourseProject.BL.Services
         {
             Task<IEnumerable<Expense>> expenses = Task.Factory.StartNew(() =>
                 _db.Expenses
-                    .Where(e => e.Member.Id == filters.Member.Id
-                                && e.Date > filters.StartDate
-                                && e.Date < filters.EndDate
-                                && (e.Reason.Title.Contains(filters.DescriptionSearch)
+                    .Where(e => e.Member.Id == filters.MemberId
+                                && e.Date >= filters.StartDate
+                                && e.Date <= filters.EndDate
+                                && (e.Reason.Title.ToLower().Contains(filters.DescriptionSearch.ToLower())
                                     || string.IsNullOrEmpty(filters.DescriptionSearch))
                                 )
                 );
             Task<IEnumerable<Income>> incomes = Task.Factory.StartNew(() =>
                 _db.Incomes
-                    .Where(i => i.Member.Id == filters.Member.Id
-                                && i.Date > filters.StartDate
-                                && i.Date < filters.EndDate
-                                && (i.Source.Title.Contains(filters.DescriptionSearch)
+                    .Where(i => i.Member.Id == filters.MemberId
+                                && i.Date >= filters.StartDate
+                                && i.Date <= filters.EndDate
+                                && (i.Source.Title.ToLower().Contains(filters.DescriptionSearch.ToLower())
                                     || string.IsNullOrEmpty(filters.DescriptionSearch))
                                 )
                 );

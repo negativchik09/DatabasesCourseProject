@@ -3,13 +3,14 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:sys="clr-namespace:System;assembly=mscorlib"
         xmlns:local="clr-namespace:BD_CourseProject.UI"
         xmlns:cmd="clr-namespace:BD_CourseProject.UI.Commands"
         mc:Ignorable="d"
-        Title="MemberView" Height="450" Width="800"
+        Title="MemberView" Height="250" Width="400" ResizeMode="CanMinimize" FontFamily="Arial" FontSize="16"
         DataContext="{Binding RelativeSource={RelativeSource Self}}">
     <Window.Resources>
-        
+        <sys:DateTime x:Key="DateTime"></sys:DateTime>
         <Style TargetType="TextBlock">
             <Setter Property="HorizontalAlignment" Value="Center"></Setter>
         </Style>
@@ -17,27 +18,67 @@
             <Setter Property="HorizontalAlignment" Value="Center"></Setter>
         </Style>
     </Window.Resources>
-    <StackPanel Orientation="Vertical">
-        <TextBlock Text="First name"/>
-        <TextBox Text="{Binding FirstName}" Width="600"/>
-        <TextBlock Text="Last name"/>
-        <TextBox Text="{Binding LastName}" Width="600"/>
-        <TextBlock Text="Role"/>
-        <ComboBox ItemsSource="{Binding FamilyRoleTypeValues}"
-                  DisplayMemberPath="Value"
-                  SelectedValuePath="Key"
-                  SelectedValue="{Binding Role, Mode=TwoWay}"/>
-        <TextBlock Text="Date of birth"/>
-        <DatePicker SelectedDate="{Binding DateOfBirth}" SelectedDateFormat="Short"/>
-        <Button Content="OK" IsDefault="True" CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=local:MemberView}}">
-            <Button.Command>
-                <cmd:CloseDialogCommand DialogResult="True"/>
-            </Button.Command>
-        </Button>
-        <Button Content="Cancel" CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=local:MemberView}}">
-            <Button.Command>
-                <cmd:CloseDialogCommand DialogResult="False"/>
-            </Button.Command>
-        </Button>
-    </StackPanel>
+    <DockPanel>
+        <Grid DockPanel.Dock="Top" Height="75">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="2*"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"></RowDefinition>
+                <RowDefinition Height="*"></RowDefinition>
+            </Grid.RowDefinitions>
+            <TextBlock Grid.Row="0" Grid.Column="0" Text="First name" Margin="5 10 5 5"/>
+            <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding FirstName}" 
+                     Margin="5 10 5 5"
+                     HorizontalAlignment="Stretch"
+                     TextAlignment="Left"
+                     VerticalContentAlignment="Center"
+                     DockPanel.Dock="Top"/>
+            <TextBlock Grid.Row="1" Grid.Column="0" Text="Last name" DockPanel.Dock="Top" Margin="5 5 5 10"/>
+            <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding LastName}" 
+                     Margin="5 5 5 10"
+                     HorizontalAlignment="Stretch"
+                     VerticalContentAlignment="Center"
+                     TextAlignment="Left" 
+                     DockPanel.Dock="Top"/>
+        </Grid>
+        <UniformGrid Columns="2" DockPanel.Dock="Top" Margin="0 5">
+            <ComboBox ItemsSource="{Binding FamilyRoleTypeValues}"
+                      DisplayMemberPath="Value"
+                      SelectedValuePath="Key"
+                      Height="30"
+                      Margin="5"
+                      SelectedValue="{Binding Role, Mode=TwoWay}"
+                      VerticalAlignment="Top"
+                      VerticalContentAlignment="Center"
+                      HorizontalContentAlignment="Center"/>
+            <DatePicker 
+                SelectedDate="{Binding DateOfBirth}" 
+                SelectedDateFormat="Short"
+                DisplayDateStart="1/01/1880"
+                Height="30"
+                Margin="5"
+                VerticalAlignment="Top"
+                VerticalContentAlignment="Center"
+                HorizontalContentAlignment="Center"
+                DisplayDateEnd="{Binding Mode=OneWay, Source={x:Static sys:DateTime.Today}}"/>
+        </UniformGrid>
+        <UniformGrid Columns="2" DockPanel.Dock="Bottom" Height="50">
+            <Button Content="OK" IsDefault="True" 
+                    CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=local:MemberView}}"
+                    Margin="10">
+                <Button.Command>
+                    <cmd:CloseDialogCommand DialogResult="True"/>
+                </Button.Command>
+            </Button>
+            <Button Content="Cancel" 
+                    CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=local:MemberView}}"
+                    Margin="10">
+                <Button.Command>
+                    <cmd:CloseDialogCommand DialogResult="False"/>
+                </Button.Command>
+            </Button>
+        </UniformGrid>
+    </DockPanel>
 </Window>

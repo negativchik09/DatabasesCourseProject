@@ -13,6 +13,7 @@ namespace BD_CourseProject.BL.Entities
 
         public RecordModel(Expense expense)
         {
+            MemberId = expense.Member.Id;
             Date = expense.Date;
             Sum = -expense.Sum;
             Description = expense.Reason.Title;
@@ -20,13 +21,10 @@ namespace BD_CourseProject.BL.Entities
 
         public RecordModel(Income income)
         {
+            MemberId = income.Member.Id;
             Date = income.Date;
             Sum = income.Sum;
             Description = income.Source.Title;
         }
-
-        public static RecordModel FromExpense(Expense expense) => new RecordModel(expense);
-
-        public static RecordModel FromIncome(Income income) => new RecordModel(income);
     }
 }

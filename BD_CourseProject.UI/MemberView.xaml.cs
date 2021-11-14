@@ -1,12 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Windows;
-using BD_CourseProject.BL.Entities;
 using BD_CourseProject.DataAccess.DatabaseModels;
 
 namespace BD_CourseProject.UI
 {
-    public partial class MemberView : Window
+    public partial class MemberView
     {
         public int Id
         {
