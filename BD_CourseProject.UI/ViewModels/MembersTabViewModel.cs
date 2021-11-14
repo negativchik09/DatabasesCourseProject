@@ -1,6 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 using System.ComponentModel;
+using System.Linq;
 using System.Windows;
 using System.Windows.Input;
 using BD_CourseProject.UI.Commands;
@@ -12,6 +15,8 @@ namespace BD_CourseProject.UI.ViewModels
 {
     public class MembersTabViewModel  : INotifyPropertyChanged
     {
+        #region Shared Information
+
         private readonly IMemberService _service;
         private MemberInfo _selectedMember;
         private string _memberSearch;
@@ -21,13 +26,15 @@ namespace BD_CourseProject.UI.ViewModels
             _service = new MemberService();
             Members = new ObservableCollection<MemberInfo>(_service.MemberInfos(_memberSearch));
             Stats = new ObservableCollection<RecordModel>();
+            Visibility = Visibility.Hidden;
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        public ObservableCollection<MemberInfo> Members { get; set; }
+        private void FirePropertyChanged(string prop = null) =>
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(prop));
 
-        public ObservableCollection<RecordModel> Stats { get; set; }
+        public ObservableCollection<MemberInfo> Members { get; set; }
 
         public MemberInfo SelectedMember
         {
@@ -35,12 +42,28 @@ namespace BD_CourseProject.UI.ViewModels
             set
             {
                 _selectedMember = value;
-                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(SelectedMember)));
+                Stats.Clear();
+                Stats.AddRange(_service.MemberStats(
+                    new MemberStatsFilter(SelectedMember.Id))
+                );
+                if (Stats.Count > 0)
+                {
+                    MaximalPossibleDate = Stats.Max(x => x.Date);
+                    MinimalPossibleDate = Stats.Min(x => x.Date);
+                    StartFilterDate = MinimalPossibleDate;
+                    EndFilterDate = MaximalPossibleDate;
+                }
+                Visibility = Visibility.Visible;
+                FirePropertyChanged(nameof(SelectedMember));
             }
         }
-        
+
         private static bool IsMemberSelected(object? obj) => obj is MemberInfo;
         
+        #endregion
+
+        #region Members CRUD
+
         public string MemberSearch
         {
             get => _memberSearch;
@@ -55,6 +78,7 @@ namespace BD_CourseProject.UI.ViewModels
             _memberSearch = search;
             Members.Clear();
             Members.AddRange(_service.MemberInfos(_memberSearch));
+            Visibility = Visibility.Hidden;
         }
         
         private ICommand _addCommand;
@@ -94,8 +118,8 @@ namespace BD_CourseProject.UI.ViewModels
             if (window.ShowDialog() == true)
             {
                 data.Id = window.Id;
-                data.FirstName = window.FirstName;
-                data.LastName = window.LastName;
+                data.FirstName = window.FirstName ?? string.Empty;
+                data.LastName = window.LastName ?? string.Empty;
                 data.DateOfBirth = window.DateOfBirth;
                 data.Role = window.Role;
                 action(data);
@@ -111,5 +135,100 @@ namespace BD_CourseProject.UI.ViewModels
             _service.RemoveMember(obj as MemberData);
             UpdateDataFunction();
         }
+        
+        #endregion
+
+        #region Additional Info
+
+        private Visibility _visibility;
+
+        public Visibility Visibility
+        {
+            get => _visibility;
+            set
+            {
+                _visibility = value;
+                FirePropertyChanged(nameof(Visibility));
+            }
+        }
+
+        public ObservableCollection<RecordModel> Stats { get; set; }
+
+        private string _statsSearchBar;
+
+        public string StatsSearchBar
+        {
+            get => _statsSearchBar;
+            set
+            {
+                _statsSearchBar = value;
+                UpdateStats();
+                FirePropertyChanged(nameof(StatsSearchBar));
+            }
+        }
+        
+        private DateTime _startFilterDate;
+
+        public DateTime StartFilterDate
+        {
+            get => _startFilterDate;
+            set
+            {
+                _startFilterDate = value;
+                UpdateStats();
+                FirePropertyChanged(nameof(StartFilterDate));
+            }
+        }
+
+        private DateTime _endFilterDate;
+
+        public DateTime EndFilterDate
+        {
+            get => _endFilterDate;
+            set
+            {
+                _endFilterDate = value;
+                UpdateStats();
+                FirePropertyChanged(nameof(EndFilterDate));
+            }
+        }
+
+        private DateTime _minimalPossibleDate;
+
+        public DateTime MinimalPossibleDate
+        {
+            get => _minimalPossibleDate;
+            set
+            {
+                _minimalPossibleDate = value;
+                FirePropertyChanged(nameof(MinimalPossibleDate));
+            }
+        }
+        
+        private DateTime _maximalPossibleDate;
+        public DateTime MaximalPossibleDate
+        {
+            get => _maximalPossibleDate;
+            set
+            {
+                _maximalPossibleDate = value;
+                FirePropertyChanged(nameof(MaximalPossibleDate));
+            }
+        }
+
+        private void UpdateStats()
+        {
+            Stats.Clear();
+            Stats.AddRange(
+                _service.MemberStats(
+                    new MemberStatsFilter(SelectedMember.Id, 
+                        StartFilterDate > MinimalPossibleDate ? StartFilterDate : MinimalPossibleDate, 
+                        EndFilterDate < MaximalPossibleDate && EndFilterDate > MinimalPossibleDate ? EndFilterDate : MaximalPossibleDate, 
+                        StatsSearchBar ?? string.Empty))
+                    .OrderBy(r => r.Date)
+                );
+        }
+
+        #endregion
     }
 }

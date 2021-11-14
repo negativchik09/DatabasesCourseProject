@@ -12,10 +12,7 @@ namespace BD_CourseProject.BL.Entities
             DescriptionSearch = descriptionSearch;
         }
 
-        public MemberStatsFilter(int memberId, DateTime startDate, DateTime endDate) 
-            : this(memberId, startDate, endDate, string.Empty){}
-
-        public MemberStatsFilter(int memberId) : this(memberId, DateTime.MinValue, DateTime.MaxValue) {}
+        public MemberStatsFilter(int memberId) : this(memberId, DateTime.MinValue, DateTime.MaxValue, string.Empty) {}
         
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }

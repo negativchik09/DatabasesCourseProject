@@ -8,6 +8,7 @@ namespace BD_CourseProject.BL.Entities
         public int Id { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
+        public string FullName { get; set; }
         public FamilyRole Role { get; set; }
         public DateTime DateOfBirth { get; set; }
 
@@ -24,6 +25,7 @@ namespace BD_CourseProject.BL.Entities
             Id = member.Id;
             FirstName = member.FirstName;
             LastName = member.LastName;
+            FullName = $"{FirstName} {LastName}";
             Role = member.Role;
             DateOfBirth = member.DateOfBirth.Date;
         }

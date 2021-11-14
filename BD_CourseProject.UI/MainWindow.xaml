@@ -13,19 +13,19 @@
         <viewModels:ExpensesTabViewModel x:Key="ExpensesViewModel"/>
         <Style TargetType="Button" x:Key="Button">
             <Setter Property="BorderThickness" Value="1"></Setter>
-            <Setter Property="Margin" Value="0"></Setter>
+            <Setter Property="Margin" Value="0 5 5 5 "></Setter>
         </Style>
         <Style TargetType="TabItem" x:Key="TabHeader">
             <Setter Property="Height" Value="40"/>
             <Setter Property="Width" Value="120"/>
         </Style>
     </Window.Resources>
-    <TabControl Grid.Row="1" HorizontalContentAlignment="Stretch">
+    <TabControl HorizontalContentAlignment="Stretch">
             <TabItem DataContext="{Binding 
                 Source={StaticResource MemberViewModel}}"
                      Style="{StaticResource TabHeader}">
                 <TabItem.Header>
-                    <TextBlock TextAlignment="Center">Пользователи</TextBlock>
+                    <TextBlock TextAlignment="Center">Members</TextBlock>
                 </TabItem.Header>
                 <TabItem.Content>
                     <DockPanel>
@@ -35,7 +35,7 @@
                                 <ColumnDefinition Width="*"/>
                                 <ColumnDefinition Width="*"/>
                                 <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="0.5*"/>
                                 <ColumnDefinition Width="3*"/>
                             </Grid.ColumnDefinitions>
                             <Button Grid.Column="0" Content="UpdateData" 
@@ -54,17 +54,17 @@
                                     Style="{StaticResource Button}"/>
                             <TextBlock Grid.Column="4" Text="Search:" VerticalAlignment="Center" HorizontalAlignment="Right"></TextBlock>
                             <TextBox Grid.Column="5"
-                                     Width="400"
                                      Margin="5"
                                      Height="25"
                                      Padding="2"
                                      Text="{Binding MemberSearch, UpdateSourceTrigger=PropertyChanged}"
                                      TextAlignment="Center"
+                                     HorizontalContentAlignment="Stretch"
                             />
                         </Grid>
                         <ListView ItemsSource="{Binding Members}"
                                   SelectedItem="{Binding SelectedMember,
-                                UpdateSourceTrigger=PropertyChanged}"
+                                  UpdateSourceTrigger=PropertyChanged}"
                                   SelectionMode="Single"
                                   DockPanel.Dock="Left">
                             <ListView.ItemTemplate>
@@ -87,23 +87,82 @@
                                 </DataTemplate>
                             </ListView.ItemTemplate>
                         </ListView>
-                        <StackPanel DockPanel.Dock="Right" Visibility="{Binding Visibility}">
-                            <TextBlock Text="{Binding SelectedMember.LastName}" TextAlignment="Center" Margin="5"/>
-                            <TextBlock Text="{Binding SelectedMember.FirstName}" TextAlignment="Center" Margin="5"/>
-                            <DatePicker></DatePicker>
-                            <TextBox
+                        <Grid DockPanel.Dock="Right" 
+                              Visibility="{Binding Visibility}">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="1*"/>
+                                <RowDefinition Height="3*"/>
+                                <RowDefinition Height="17*"/>
+                            </Grid.RowDefinitions>
+                            <TextBlock Grid.Row="0"
+                                Text="{Binding SelectedMember.FullName}" 
+                                TextAlignment="Center" 
                                 Margin="5"
-                                Height="30"
-                                Text="{Binding MemberSearch, 
-                                UpdateSourceTrigger=PropertyChanged}"/>
-                            <ListView ItemsSource="{Binding Stats}">
+                                FontWeight="Bold"/>
+                            <Grid Grid.Row="1">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="3*"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="3*"/>
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="*"/>
+                                    <RowDefinition Height="*"/>
+                                </Grid.RowDefinitions>
+                                <TextBlock 
+                                    Grid.Row="0"
+                                    Grid.Column="0" 
+                                    Text="From" 
+                                    Margin="5"
+                                    TextAlignment="Right"
+                                    VerticalAlignment="Center"/>
+                                <DatePicker
+                                    Grid.Row="0"
+                                    Grid.Column="1"
+                                    SelectedDate="{Binding StartFilterDate}" 
+                                    DisplayDateStart="{Binding MinimalPossibleDate}"
+                                    DisplayDateEnd="{Binding EndFilterDate}"
+                                    SelectedDateFormat="Short"
+                                    Height="30"
+                                    Margin="5"
+                                    VerticalContentAlignment="Center"/>
+                                <TextBlock
+                                    Grid.Row="0"
+                                    Grid.Column="2" 
+                                    Text="To" 
+                                    Margin="5"
+                                    TextAlignment="Right"
+                                    VerticalAlignment="Center"/>
+                                <DatePicker 
+                                    Grid.Row="0"
+                                    Grid.Column="3"
+                                    SelectedDate="{Binding EndFilterDate}" 
+                                    DisplayDateStart="{Binding StartFilterDate}"
+                                    DisplayDateEnd="{Binding MaximalPossibleDate}"
+                                    SelectedDateFormat="Short"
+                                    Height="30"
+                                    Margin="5"
+                                    VerticalContentAlignment="Center"/>
+                                <TextBox
+                                    Grid.Row="1"
+                                    Grid.Column="0"
+                                    Grid.ColumnSpan="4"
+                                    Margin="5"
+                                    Height="30"
+                                    VerticalContentAlignment="Center"
+                                    Text="{Binding StatsSearchBar, 
+                                        UpdateSourceTrigger=PropertyChanged}"/>
+                            </Grid>
+                            <ListView Grid.Row="2"
+                                ItemsSource="{Binding Stats}" Margin="5">
                                 <ListView.ItemTemplate>
                                     <DataTemplate>
-                                        <UniformGrid Columns="4" Width="450">
+                                        <UniformGrid Columns="3" Width="440">
                                             <UniformGrid.Resources>
                                                 <Style TargetType="TextBlock">
                                                     <Setter Property="Margin" Value="5"></Setter>
-                                                    <Setter Property="TextAlignment" Value="Center"></Setter>
+                                                    <Setter Property="TextAlignment" Value="Left"></Setter>
                                                 </Style>
                                             </UniformGrid.Resources>
                                             <TextBlock Text="{Binding DateString}"></TextBlock>
@@ -113,7 +172,7 @@
                                     </DataTemplate>
                                 </ListView.ItemTemplate>
                             </ListView>
-                        </StackPanel>
+                        </Grid>
                     </DockPanel>
                 </TabItem.Content>
             </TabItem>
@@ -121,7 +180,7 @@
                 Source={StaticResource IncomesViewModel}}"
                      Style="{StaticResource TabHeader}">
                 <TabItem.Header>
-                    <TextBlock TextAlignment="Center">Доходы</TextBlock>
+                    <TextBlock TextAlignment="Center">Incomes</TextBlock>
                 </TabItem.Header>
                 <TabItem.Content>
                     <DockPanel>
@@ -135,7 +194,7 @@
                 Source={StaticResource ExpensesViewModel}}"
                      Style="{StaticResource TabHeader}">
                 <TabItem.Header>
-                    <TextBlock TextAlignment="Center">Расходы</TextBlock>
+                    <TextBlock TextAlignment="Center">Expenses</TextBlock>
                 </TabItem.Header>
                 <TabItem.Content>
                     <TextBlock TextAlignment="Center">Пользователи</TextBlock>
