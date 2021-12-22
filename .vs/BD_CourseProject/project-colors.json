@@ -1,0 +1,16 @@
+{
+  "Version": 1,
+  "ProjectMap": {
+    "36c25acb-b755-4066-939f-09f14f8f4b15": {
+      "ProjectGuid": "36c25acb-b755-4066-939f-09f14f8f4b15",
+      "DisplayName": "Solution Items",
+      "ColorIndex": 0
+    },
+    "3b8703d9-9e47-4eb3-9a21-269e1d9a926b": {
+      "ProjectGuid": "3b8703d9-9e47-4eb3-9a21-269e1d9a926b",
+      "DisplayName": "BD_CourseProject.BL",
+      "ColorIndex": 1
+    }
+  },
+  "NextColorIndex": 2
+}

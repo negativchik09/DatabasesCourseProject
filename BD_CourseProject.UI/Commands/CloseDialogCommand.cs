@@ -13,7 +13,7 @@ namespace BD_CourseProject.UI.Commands
         {
             if (!CanExecute(parameter)) return;
 
-            var window = parameter as MemberView;
+            var window = parameter as Window;
 
             window.DialogResult = DialogResult;
             

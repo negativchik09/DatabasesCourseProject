@@ -11,7 +11,9 @@ namespace BD_CourseProject.DataAccess.Interfaces
         public void Delete(Member member);
         public IEnumerable<Income> Incomes { get; }
         public void Create(Income income);
+        public IEnumerable<IncomeSource> Sources { get; }
         public IEnumerable<Expense> Expenses { get; }
         public void Create(Expense expense);
+        public IEnumerable<ExpenseReason> Reasons { get; }
     }
 }

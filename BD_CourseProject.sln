@@ -1,10 +1,15 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BD_CourseProject.BL", "BD_CourseProject.BL\BD_CourseProject.BL.csproj", "{3B8703D9-9E47-4EB3-9A21-269E1D9A926B}"
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31919.166
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BD_CourseProject.BL", "BD_CourseProject.BL\BD_CourseProject.BL.csproj", "{3B8703D9-9E47-4EB3-9A21-269E1D9A926B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BD_CourseProject.DataAccess", "BD_CourseProject.DataAccess\BD_CourseProject.DataAccess.csproj", "{C308E8A4-8317-49CE-AA23-E57623601ED3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BD_CourseProject.DataAccess", "BD_CourseProject.DataAccess\BD_CourseProject.DataAccess.csproj", "{C308E8A4-8317-49CE-AA23-E57623601ED3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BD_CourseProject.UI", "BD_CourseProject.UI\BD_CourseProject.UI.csproj", "{29A1C3BD-7A58-40AC-A070-3ABCC23B2DE5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BD_CourseProject.UI", "BD_CourseProject.UI\BD_CourseProject.UI.csproj", "{29A1C3BD-7A58-40AC-A070-3ABCC23B2DE5}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{36C25ACB-B755-4066-939F-09F14F8F4B15}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -24,5 +29,11 @@ Global
 		{29A1C3BD-7A58-40AC-A070-3ABCC23B2DE5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{29A1C3BD-7A58-40AC-A070-3ABCC23B2DE5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{29A1C3BD-7A58-40AC-A070-3ABCC23B2DE5}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {70D2012A-4264-4128-A244-A84282CEF36E}
 	EndGlobalSection
 EndGlobal

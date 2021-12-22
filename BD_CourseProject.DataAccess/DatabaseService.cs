@@ -4,27 +4,13 @@ using System.Linq;
 using BD_CourseProject.DataAccess.DatabaseModels;
 using BD_CourseProject.DataAccess.Interfaces;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Design;
 
 namespace BD_CourseProject.DataAccess
 {
     public class DatabaseService : IDatabaseService
     {
         private readonly DatabaseContext _ctx;
-        private class DatabaseContextFactory : IDesignTimeDbContextFactory<DatabaseContext>
-        {
-            public DatabaseContext CreateDbContext(string[] args)
-            {
-                var optionsBuilder = new DbContextOptionsBuilder<DatabaseContext>();
-                optionsBuilder.UseSqlServer(
-                    "Server=localhost\\SQLEXPRESS;Database=BD_CourseProject;Trusted_Connection=True;",
-                    builder => builder.MigrationsAssembly("BD_CourseProject.DataAccess")
-                    );
 
-                return new DatabaseContext(optionsBuilder.Options);
-            }
-        }
-        
         public static DatabaseService Instance { get; }
 
         static DatabaseService()
@@ -73,14 +59,14 @@ namespace BD_CourseProject.DataAccess
             var source = _ctx.IncomeSources.FirstOrDefault(x => x.Id == income.Source.Id);
             if (source == null)
             {
-                throw new ArgumentException("invalid source Id");
+                throw new ArgumentException("Invalid source Id");
             }
-
             income.Source = source;
-
             _ctx.Add(income);
             _ctx.SaveChanges();
         }
+
+        public IEnumerable<IncomeSource> Sources => _ctx.IncomeSources;
 
         public IEnumerable<Expense> Expenses => _ctx.Expenses
             .Include(x => x.Member)
@@ -91,7 +77,7 @@ namespace BD_CourseProject.DataAccess
             var reason = _ctx.ExpenseReasons.FirstOrDefault(x => x.Id == expense.Reason.Id);
             if (reason == null)
             {
-                throw new ArgumentException("invalid source Id");
+                throw new ArgumentException("invalid reason Id");
             }
 
             expense.Reason = reason;
@@ -99,5 +85,7 @@ namespace BD_CourseProject.DataAccess
             _ctx.Add(expense);
             _ctx.SaveChanges();
         }
+        
+        public IEnumerable<ExpenseReason> Reasons => _ctx.ExpenseReasons;
     }
 }

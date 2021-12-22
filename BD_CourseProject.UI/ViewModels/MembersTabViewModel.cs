@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Linq;
 using System.Windows;
@@ -19,13 +17,15 @@ namespace BD_CourseProject.UI.ViewModels
 
         private readonly IMemberService _service;
         private MemberInfo _selectedMember;
-        private string _memberSearch;
 
         public MembersTabViewModel()
         {
             _service = new MemberService();
-            Members = new ObservableCollection<MemberInfo>(_service.MemberInfos(_memberSearch));
+            Members = new ObservableCollection<MemberInfo>(_service.MemberInfos(
+                new MemberSearchFilter(DateTime.MinValue, DateTime.MaxValue, "")));
             Stats = new ObservableCollection<RecordModel>();
+            _periodStart = new DateTime(2010, 1, 1);
+            _periodEnd = DateTime.Today;
             Visibility = Visibility.Hidden;
         }
 
@@ -43,6 +43,11 @@ namespace BD_CourseProject.UI.ViewModels
             {
                 _selectedMember = value;
                 Stats.Clear();
+                if (value == null)
+                {
+                    FirePropertyChanged(nameof(SelectedMember));
+                    return;
+                }
                 Stats.AddRange(_service.MemberStats(
                     new MemberStatsFilter(SelectedMember.Id))
                 );
@@ -64,20 +69,52 @@ namespace BD_CourseProject.UI.ViewModels
 
         #region Members CRUD
 
+        private string _memberSearch;
         public string MemberSearch
         {
             get => _memberSearch;
-            set => UpdateDataFunction(value);
+            set
+            {
+                _memberSearch = value;
+                UpdateDataFunction();
+                FirePropertyChanged(nameof(MemberSearch));
+            }
+        }
+
+        private DateTime _periodStart;
+
+        public DateTime PeriodStart
+        {
+            get => _periodStart;
+            set
+            {
+                _periodStart = value;
+                UpdateDataFunction();
+                FirePropertyChanged(nameof(PeriodStart));
+            }
+        }
+        
+        private DateTime _periodEnd;
+
+        public DateTime PeriodEnd
+        {
+            get => _periodEnd;
+            set
+            {
+                _periodEnd = value;
+                UpdateDataFunction();
+                FirePropertyChanged(nameof(PeriodEnd));
+            }
         }
 
         public ICommand UpdateData =>
             new DefaultCommand((obj) => UpdateDataFunction());
 
-        private void UpdateDataFunction(string search = "")
+        private void UpdateDataFunction()
         {
-            _memberSearch = search;
             Members.Clear();
-            Members.AddRange(_service.MemberInfos(_memberSearch));
+            Members.AddRange(_service.MemberInfos(
+                new MemberSearchFilter(PeriodStart, PeriodEnd, MemberSearch)));
             Visibility = Visibility.Hidden;
         }
         
@@ -115,15 +152,13 @@ namespace BD_CourseProject.UI.ViewModels
                 Role = data.Role
             };
 
-            if (window.ShowDialog() == true)
-            {
-                data.Id = window.Id;
-                data.FirstName = window.FirstName ?? string.Empty;
-                data.LastName = window.LastName ?? string.Empty;
-                data.DateOfBirth = window.DateOfBirth;
-                data.Role = window.Role;
-                action(data);
-            }
+            if (window.ShowDialog() != true) return;
+            data.Id = window.Id;
+            data.FirstName = window.FirstName ?? string.Empty;
+            data.LastName = window.LastName ?? string.Empty;
+            data.DateOfBirth = window.DateOfBirth;
+            data.Role = window.Role;
+            action(data);
         }
 
         public ICommand Delete => new DefaultCommand(

@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using BD_CourseProject.BL.Entities;
@@ -19,16 +18,19 @@ namespace BD_CourseProject.BL.Services
             _db = DatabaseService.Instance;
         }
 
-        public IEnumerable<MemberInfo> MemberInfos(string searchCriteria)
+        public IEnumerable<MemberInfo> MemberInfos(MemberSearchFilter filter)
         {
-            Func<Member, bool> isLastNameContains = (m) => m.LastName.ToLower().Contains(searchCriteria.ToLower());
-            Func<Member, bool> isFirstNameContains = (m) => m.FirstName.ToLower().Contains(searchCriteria.ToLower());
-            Func<Member, bool> isRoleContains = (m) => m.Role.ToString().ToLower().Contains(searchCriteria.ToLower());
-            return _db.Members.Where(m => string.IsNullOrEmpty(searchCriteria) 
-                                          || isFirstNameContains(m)
-                                          || isLastNameContains(m)
-                                          || isRoleContains(m))
-                .Select(m => new MemberInfo(m));
+            foreach (var element in _db.Members.Where(m => string.IsNullOrEmpty(filter.Query) 
+                                                           || m.LastName.ToLower().Contains(filter.Query.ToLower())
+                                                           || m.FirstName.ToLower().Contains(filter.Query.ToLower())
+                                                           || m.Role.ToString().ToLower().Contains(filter.Query.ToLower())))
+            {
+                element.Incomes = element.Incomes.Where(i => i.Date >= filter.StartDate && i.Date <= filter.EndDate)
+                    .ToList();
+                element.Expenses = element.Expenses.Where(e => e.Date >= filter.StartDate && e.Date <= filter.EndDate)
+                    .ToList();
+                yield return new MemberInfo(element);
+            }
         }
 
         public void AddMember(MemberData data)
@@ -81,8 +83,7 @@ namespace BD_CourseProject.BL.Services
                 );
             return expenses.Result
                 .Select(expense => new RecordModel(expense))
-                .Concat(incomes.Result
-                    .Select(income => new RecordModel(income)))
+                .Concat(incomes.Result.Select(income => new RecordModel(income)))
                 .ToList();
         }
     }

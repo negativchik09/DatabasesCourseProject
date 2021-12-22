@@ -3,6 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:sys="clr-namespace:System;assembly=mscorlib"
         xmlns:local="clr-namespace:BD_CourseProject.UI"
         xmlns:viewModels="clr-namespace:BD_CourseProject.UI.ViewModels"
         mc:Ignorable="d"
@@ -31,62 +32,107 @@
                     <DockPanel>
                         <Grid DockPanel.Dock="Top" Height="50">
                             <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="0.5*"/>
-                                <ColumnDefinition Width="3*"/>
+                                <ColumnDefinition Width="0.75*"/>
+                                <ColumnDefinition Width="3.55*"/>
+                                <ColumnDefinition Width="1.75*"/>
+                                <ColumnDefinition Width="1.75*"/>
+                                <ColumnDefinition Width="2.5*"/>
+                                <ColumnDefinition Width="2.5*"/>
                             </Grid.ColumnDefinitions>
-                            <Button Grid.Column="0" Content="UpdateData" 
-                                    Command="{Binding UpdateData}"
-                                    Style="{StaticResource Button}"/>
-                            <Button Grid.Column="1" Content="Add" 
-                                    Command="{Binding Add}"
-                                    Style="{StaticResource Button}"/>
-                            <Button Grid.Column="2" Content="Update" 
-                                    Command="{Binding Update}"
-                                    CommandParameter="{Binding SelectedMember}"
-                                    Style="{StaticResource Button}"/>
-                            <Button Grid.Column="3" Content="Delete" 
-                                    Command="{Binding Delete}"
-                                    CommandParameter="{Binding SelectedMember}"
-                                    Style="{StaticResource Button}"/>
-                            <TextBlock Grid.Column="4" Text="Search:" VerticalAlignment="Center" HorizontalAlignment="Right"></TextBlock>
-                            <TextBox Grid.Column="5"
-                                     Margin="5"
-                                     Height="25"
+                            <TextBlock Grid.Column="0" Text="Search:" VerticalAlignment="Center" HorizontalAlignment="Right"></TextBlock>
+                            <TextBox Grid.Column="1"
+                                     Margin="5 5 5 5"
                                      Padding="2"
                                      Text="{Binding MemberSearch, UpdateSourceTrigger=PropertyChanged}"
                                      TextAlignment="Center"
+                                     VerticalContentAlignment="Center"
                                      HorizontalContentAlignment="Stretch"
                             />
+                            <Button Grid.Column="2" Content="UpdateData" 
+                                    Command="{Binding UpdateData}"
+                                    Style="{StaticResource Button}"/>
+                            <Button Grid.Column="3" Content="Add" 
+                                    Command="{Binding Add}"
+                                    Style="{StaticResource Button}"/>
+                            <Button Grid.Column="4" Content="Update" 
+                                    Visibility="{Binding Visibility}"
+                                    Command="{Binding Update}"
+                                    CommandParameter="{Binding SelectedMember}"
+                                    Style="{StaticResource Button}"/>
+                            <Button Grid.Column="5" Content="Delete"
+                                    Visibility="{Binding Visibility}"
+                                    Command="{Binding Delete}"
+                                    CommandParameter="{Binding SelectedMember}"
+                                    Style="{StaticResource Button}"/>
                         </Grid>
-                        <ListView ItemsSource="{Binding Members}"
-                                  SelectedItem="{Binding SelectedMember,
-                                  UpdateSourceTrigger=PropertyChanged}"
-                                  SelectionMode="Single"
-                                  DockPanel.Dock="Left">
-                            <ListView.ItemTemplate>
-                                <DataTemplate>
-                                    <UniformGrid Columns="7" Width="700">
-                                        <UniformGrid.Resources>
-                                        <Style TargetType="TextBlock">
-                                            <Setter Property="Margin" Value="7"></Setter>
-                                            <Setter Property="TextAlignment" Value="Center"></Setter>
-                                        </Style>
-                                        </UniformGrid.Resources>
-                                        <TextBlock Text="{Binding FirstName}"></TextBlock>
-                                        <TextBlock Text="{Binding LastName}"></TextBlock>
-                                        <TextBlock Text="{Binding DateString}"></TextBlock>
-                                        <TextBlock Text="{Binding Role}"></TextBlock>
-                                        <TextBlock Text="{Binding IncomesSum}"></TextBlock>
-                                        <TextBlock Text="{Binding ExpensesSum}"></TextBlock>
-                                        <TextBlock Text="{Binding Marge}"></TextBlock>
-                                    </UniformGrid>
-                                </DataTemplate>
-                            </ListView.ItemTemplate>
-                        </ListView>
+                        <Grid DockPanel.Dock="Left">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="40"/>
+                                <RowDefinition/>
+                            </Grid.RowDefinitions>
+                            <Grid Grid.Row="0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="3*"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="3*"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock 
+                                    Grid.Column="0" 
+                                    Text="From" 
+                                    Margin="5"
+                                    TextAlignment="Right"
+                                    VerticalAlignment="Center"/>
+                                <DatePicker
+                                    Grid.Column="1"
+                                    SelectedDate="{Binding  PeriodStart}" 
+                                    DisplayDateStart="{Binding PeriodStart, Mode=OneTime}"
+                                    DisplayDateEnd="{Binding PeriodEnd}"
+                                    SelectedDateFormat="Short"
+                                    Height="30"
+                                    Margin="5"
+                                    VerticalContentAlignment="Center"/>
+                                <TextBlock
+                                    Grid.Column="2" 
+                                    Text="To" 
+                                    Margin="5"
+                                    TextAlignment="Right"
+                                    VerticalAlignment="Center"/>
+                                <DatePicker 
+                                    Grid.Column="3"
+                                    SelectedDate="{Binding PeriodEnd}" 
+                                    DisplayDateStart="{Binding PeriodStart}"
+                                    DisplayDateEnd="{Binding Mode=OneWay, Source={x:Static sys:DateTime.Today}}"
+                                    SelectedDateFormat="Short"
+                                    Height="30"
+                                    Margin="5"
+                                    VerticalContentAlignment="Center"/>
+                            </Grid>
+                            <ListView Grid.Row="1" ItemsSource="{Binding Members}"
+                                      SelectedItem="{Binding SelectedMember,
+                                      UpdateSourceTrigger=PropertyChanged}"
+                                      SelectionMode="Single">
+                                <ListView.ItemTemplate>
+                                    <DataTemplate>
+                                        <UniformGrid Columns="7" Width="700">
+                                            <UniformGrid.Resources>
+                                            <Style TargetType="TextBlock">
+                                                <Setter Property="Margin" Value="7"></Setter>
+                                                <Setter Property="TextAlignment" Value="Center"></Setter>
+                                            </Style>
+                                            </UniformGrid.Resources>
+                                            <TextBlock Text="{Binding FirstName}"></TextBlock>
+                                            <TextBlock Text="{Binding LastName}"></TextBlock>
+                                            <TextBlock Text="{Binding DateString}"></TextBlock>
+                                            <TextBlock Text="{Binding Role}"></TextBlock>
+                                            <TextBlock Text="{Binding IncomesSum}"></TextBlock>
+                                            <TextBlock Text="{Binding ExpensesSum}"></TextBlock>
+                                            <TextBlock Text="{Binding Marge}"></TextBlock>
+                                        </UniformGrid>
+                                    </DataTemplate>
+                                </ListView.ItemTemplate>
+                            </ListView>
+                        </Grid>
                         <Grid DockPanel.Dock="Right" 
                               Visibility="{Binding Visibility}">
                             <Grid.RowDefinitions>
@@ -184,9 +230,40 @@
                 </TabItem.Header>
                 <TabItem.Content>
                     <DockPanel>
-                        <StackPanel Orientation="Horizontal" DockPanel.Dock="Top">
-                            <Button Content="UpdateData"></Button>
-                        </StackPanel>
+                        <Grid DockPanel.Dock="Top" Height="50">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <Button Grid.Column="0" Content="Update Data" 
+                                    Command="{Binding UpdateData}"
+                                    Style="{StaticResource Button}"/>
+                            <Button Grid.Column="1" Content="Add Income" 
+                                    Command="{Binding AddIncome}"
+                                    Style="{StaticResource Button}"/>
+                        </Grid>
+                        <ListView ItemsSource="{Binding Incomes}">
+                        <ListView.ItemTemplate>
+                                <DataTemplate>
+                                    <UniformGrid Columns="4">
+                                        <UniformGrid.Resources>
+                                        <Style TargetType="TextBlock">
+                                            <Setter Property="Margin" Value="7"></Setter>
+                                            <Setter Property="TextAlignment" Value="Center"></Setter>
+                                            <Setter Property="Width" Value="200"></Setter>
+                                        </Style>
+                                        </UniformGrid.Resources>
+                                        <TextBlock Text="{Binding Sum}"></TextBlock>
+                                        <TextBlock Text="{Binding SourceTitle}"></TextBlock>
+                                        <TextBlock Text="{Binding DateString}"></TextBlock>
+                                        <TextBlock Text="{Binding MemberName}"></TextBlock>
+                                    </UniformGrid>
+                                </DataTemplate>
+                            </ListView.ItemTemplate>
+                        </ListView>
                     </DockPanel>
                 </TabItem.Content>
             </TabItem>
@@ -197,7 +274,42 @@
                     <TextBlock TextAlignment="Center">Expenses</TextBlock>
                 </TabItem.Header>
                 <TabItem.Content>
-                    <TextBlock TextAlignment="Center">Пользователи</TextBlock>
+                    <DockPanel>
+                        <Grid DockPanel.Dock="Top" Height="50">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <Button Grid.Column="0" Content="Update Data" 
+                                    Command="{Binding UpdateData}"
+                                    Style="{StaticResource Button}"/>
+                            <Button Grid.Column="1" Content="Add Expense" 
+                                    Command="{Binding AddExpense}"
+                                    Style="{StaticResource Button}"/>
+                        </Grid>
+                        <ListView ItemsSource="{Binding Expenses}">
+                        <ListView.ItemTemplate>
+                                <DataTemplate>
+                                    <UniformGrid Columns="4">
+                                        <UniformGrid.Resources>
+                                        <Style TargetType="TextBlock">
+                                            <Setter Property="Margin" Value="7"></Setter>
+                                            <Setter Property="TextAlignment" Value="Center"></Setter>
+                                            <Setter Property="Width" Value="200"></Setter>
+                                        </Style>
+                                        </UniformGrid.Resources>
+                                        <TextBlock Text="{Binding Sum}"></TextBlock>
+                                        <TextBlock Text="{Binding ReasonTitle}"></TextBlock>
+                                        <TextBlock Text="{Binding DateString}"></TextBlock>
+                                        <TextBlock Text="{Binding MemberName}"></TextBlock>
+                                    </UniformGrid>
+                                </DataTemplate>
+                            </ListView.ItemTemplate>
+                        </ListView>
+                    </DockPanel>
                 </TabItem.Content>
             </TabItem>
         </TabControl>
