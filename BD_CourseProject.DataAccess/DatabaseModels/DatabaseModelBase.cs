@@ -5,5 +5,3 @@
         public int Id { get; set; }
     }
 }
-
-// Максим гей
